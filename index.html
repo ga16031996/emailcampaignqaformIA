@@ -115,23 +115,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle form submission
     submitBtn.addEventListener('click', function (e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        // Get form data
-        const formData = new FormData(form);
-        
-        fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('Form submitted successfully!');
-            // Display Submission ID after submission
-            submissionIdDisplay.textContent = 'Submission ID: ' + data.submissionId;
-        })
-        .catch(error => console.error('Error submitting form:', error));
-    });
+    // Validate form first
+    if (!form.checkValidity()) {
+        form.reportValidity(); // Show validation error messages
+        return; // Stop submission
+    }
+
+    // Set/update submission time before submitting
+    document.getElementById('submissionTime').value = new Date().toLocaleString();
+
+    // Proceed with submission if valid
+    const formData = new FormData(form);
+
+    fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Form submitted successfully!');
+        submissionIdDisplay.textContent = 'Submission ID: ' + data.submissionId;
+    })
+    .catch(error => console.error('Error submitting form:', error));
+});
 
     // Handle saving form data
     saveBtn.addEventListener('click', function () {
