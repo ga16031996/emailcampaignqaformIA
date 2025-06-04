@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Email Campaign QA Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f9f9f9; padding: 0; margin: 0; }
+    header { background: #001F3F; color: white; padding: 1rem; text-align: center; }
+    form { max-width: 900px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+    input, textarea, select { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+    button { background: #0074D9; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; margin-right: 10px; }
+    button:hover { background: #005fa3; }
+    #submissionIdDisplay { display: none; font-weight: bold; color: green; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Email Campaign QA Form</h1>
+  </header>
+
+  <form id="qaForm">
+    <!-- Hidden tracking fields -->
+    <input type="hidden" id="createDate" name="Create Date" />
+    <input type="hidden" id="submissionTime" name="Submission Time" />
+    <input type="hidden" id="submissionId" name="Submission ID" />
+
+    <!-- Main Fields -->
+    <div class="form-group"><label for="filledBy">Form Filled By</label><input type="text" id="filledBy" name="Form Filled By" required></div>
+    <div class="form-group"><label for="clientName">Client Name</label><input type="text" id="clientName" name="Client Name" required></div>
+    <div class="form-group"><label for="campaignType">Campaign Type</label><select id="campaignType" name="Campaign Type" required><option value="">Please choose below option</option><option value="Manual Campaigns">Manual Campaigns</option><option value="SMS">SMS</option><option value="Automation emails">Automation emails</option></select></div>
+    <div class="form-group"><label for="jobType">Job Type</label><select id="jobType" name="Job Type" required><option value="">Please choose below option</option><option value="Design only">Design only</option><option value="Design + Coding">Design + Coding</option><option value="Coding only">Coding only</option></select></div>
+    <div class="form-group"><label for="noOfEmails">No of Emails</label><input type="number" id="noOfEmails" name="No of Emails" required></div>
+    <div class="form-group"><label for="emailName">Email/SMS/Automation Name</label><input type="text" id="emailName" name="Email/SMS/Automation Name" required></div>
+    <div class="form-group"><label for="esp">ESP</label><input type="text" id="esp" name="ESP" required></div>
+    <div class="form-group"><label for="fromName">From Name</label><input type="text" id="fromName" name="From Name" required></div>
+    <div class="form-group"><label for="fromEmail">From Email Address</label><input type="email" id="fromEmail" name="From Email Address" required></div>
+    <div class="form-group"><label for="replyToEmail">Reply-to Email Address</label><input type="email" id="replyToEmail" name="Reply-to Email Address" required></div>
+    <div class="form-group"><label for="subjectLine">Subject Line</label><input type="text" id="subjectLine" name="Subject Line" required></div>
+    <div class="form-group"><label for="previewText">Preview Text</label><input type="text" id="previewText" name="Preview Text" required></div>
+    <div class="form-group"><label for="abTest">A/B Testing</label><select id="abTest" name="A/B Testing" required><option value="">Please choose below option</option><option value="Subject line A/B testing">Subject line A/B testing</option><option value="Time">Time</option><option value="Content">Content</option><option value="Design changes / Layout changes">Design changes / Layout changes</option><option value="Other">Other</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="abDetails">A/B Test Details</label><textarea id="abDetails" name="A/B Test Details" required></textarea></div>
+    <div class="form-group"><label for="mainList">Main List</label><input type="text" id="mainList" name="Main List" required></div>
+    <div class="form-group"><label for="segment">Segment</label><input type="text" id="segment" name="Segment" required></div>
+    <div class="form-group"><label for="count">Count (After Suppression)</label><input type="text" id="count" name="Count (After Suppression)" required></div>
+    <div class="form-group"><label for="campaignDate">Campaign Date</label><input type="text" id="campaignDate" name="Campaign Date" required></div>
+    <div class="form-group"><label for="campaignTime">Campaign Time</label><input type="text" id="campaignTime" name="Campaign Time" required></div>
+    <div class="form-group"><label for="testEmail">Test Email List/Person</label><input type="email" id="testEmail" name="Test Email List/Person" required></div>
+
+    <div class="form-group"><label for="linkCheck">Link Check</label><select id="linkCheck" name="Link Check" required><option value="">Please choose below option</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="contentCheck">Content Error Check</label><select id="contentCheck" name="Content Error Check" required><option value="">Please choose below option</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="altCheck">Alt Tag Check</label><select id="altCheck" name="Alt Tag Check" required><option value="">Please choose below option</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="promoCode">Promo Code?</label><input type="text" id="promoCode" name="Promo code?" required></div>
+    <div class="form-group"><label for="canSpam">CAN-SPAM Compliant</label><select id="canSpam" name="CAN-SPAM Compliant" required><option value="">Please choose below option</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="unsubscribeLink">Unsubscribe Link</label><select id="unsubscribeLink" name="Unsubscribe Link" required><option value="">Please choose below option</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="salutation">Salutation (First Name)</label><select id="salutation" name="Salutation(First Name)" required><option value="">Please choose below option</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="spf">SPF</label><select id="spf" name="SPF" required><option value="">Please choose below option</option><option value="PASS">PASS</option><option value="FAIL">FAIL</option></select></div>
+    <div class="form-group"><label for="dkim">DKIM</label><select id="dkim" name="DKIM" required><option value="">Please choose below option</option><option value="PASS">PASS</option><option value="FAIL">FAIL</option></select></div>
+    <div class="form-group"><label for="dmarc">DMARC</label><select id="dmarc" name="DMARC" required><option value="">Please choose below option</option><option value="PASS">PASS</option><option value="FAIL">FAIL</option></select></div>
+    <div class="form-group"><label for="utmTracking">UTM Tracking?</label><select id="utmTracking" name="UTM Tracking?" required><option value="">Please choose below option</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group"><label for="liveLink">Live Campaign Link</label><input type="text" id="liveLink" name="Live Campaign Link" required></div>
+    <div class="form-group"><label for="eoa">EOA</label><input type="text" id="eoa" name="EOA" required></div>
+    <div class="form-group"><label for="renderingIssues">Any Rendering Issues</label><textarea id="renderingIssues" name="Any Rendering Issues - Device Name + Platform" required></textarea></div>
+    <div class="form-group"><label for="approval">Campaign Approval</label><select id="approval" name="Campaign Approval" required><option value="">Please choose below option</option><option value="Pending">Pending</option><option value="Approved">Approved</option></select></div>
+    <div class="form-group"><label for="links">LINKS (Title + Link)</label><textarea id="links" name="LINKS" required></textarea></div>
+
+    <!-- Buttons -->
+    <button type="button" id="saveBtn">Save</button>
+    <button type="submit" id="submitBtn">Submit</button>
+    <p id="submissionIdDisplay"></p>
+	<table style="width: 100%; margin-top: 30px; border-collapse: collapse;">
+  <tr>
+      <!-- Right Column: Edit Submission ID -->
+
+	<td style="vertical-align: top; width: 50%; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #f9f9f9;">
+      <h3 style="margin-top: 0;">Enter Submission ID to Edit</h3>
+      <input type="text" id="searchResponseId" placeholder="Submission ID" style="width: 100%; padding: 8px; margin-top: 10px;" />
+      <br />
+      <button type="button" id="fetchDataBtn" style="margin-top: 15px; background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px;">
+        Fetch Data
+      </button>
+    </td>
+        <!-- Left Column: Send to Client -->
+
+
+    <td style="vertical-align: top; width: 50%; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #f9f9f9;">
+      <h3 style="margin-top: 0;">Send to Client</h3>
+      <p>Use the button below to send the JOB SHEET to the client.</p>
+<button type="button" id="sendJobSheetBtn">SEND JOB SHEET to client</button>
+    </td>
+  </tr>
+</table>
+</form>
+
+
+
+ 
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('qaForm');
+    const saveBtn = document.getElementById('saveBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const fetchDataBtn = document.getElementById('fetchDataBtn');
+    const sendJobSheetBtn = document.getElementById('sendJobSheetBtn');
+    const submissionIdDisplay = document.getElementById('submissionIdDisplay');
+    const searchResponseId = document.getElementById('searchResponseId');
+
+    // Initialize createDate and submissionTime
+    document.getElementById('createDate').value = new Date().toLocaleString();
+    document.getElementById('submissionTime').value = new Date().toLocaleString();
+
+    // Handle form submission
+    submitBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // Get form data
+        const formData = new FormData(form);
+        
+        fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Form submitted successfully!');
+            // Display Submission ID after submission
+            submissionIdDisplay.textContent = 'Submission ID: ' + data.submissionId;
+        })
+        .catch(error => console.error('Error submitting form:', error));
+    });
+
+    // Handle saving form data
+    saveBtn.addEventListener('click', function () {
+        const formData = new FormData(form);
+        
+        fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Form saved successfully!');
+            // Display Submission ID after saving
+            submissionIdDisplay.textContent = 'Saved with Submission ID: ' + data.submissionId;
+        })
+        .catch(error => console.error('Error saving form:', error));
+    });
+
+    // Handle fetching data by Submission ID
+    fetchDataBtn.addEventListener('click', function () {
+        const submissionId = searchResponseId.value;
+        
+        if (submissionId) {
+            fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec?submissionId=' + submissionId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        // Populate form fields with fetched data
+                        form.elements['Form Filled By'].value = data['Form Filled By'];
+                        form.elements['Client Name'].value = data['Client Name'];
+                        form.elements['Campaign Type'].value = data['Campaign Type'];
+                        form.elements['Job Type'].value = data['Job Type'];
+                        form.elements['No of Emails'].value = data['No of Emails'];
+                        form.elements['Email/SMS/Automation Name'].value = data['Email/SMS/Automation Name'];
+                        form.elements['ESP'].value = data['ESP'];
+                        form.elements['From Name'].value = data['From Name'];
+                        form.elements['From Email Address'].value = data['From Email Address'];
+                        form.elements['Reply-to Email Address'].value = data['Reply-to Email Address'];
+                        form.elements['Subject Line'].value = data['Subject Line'];
+                        form.elements['Preview Text'].value = data['Preview Text'];
+                        form.elements['A/B Testing'].value = data['A/B Testing'];
+                        form.elements['A/B Test Details'].value = data['A/B Test Details'];
+                        form.elements['Main List'].value = data['Main List'];
+                        form.elements['Segment'].value = data['Segment'];
+                        form.elements['Count (After Suppression)'].value = data['Count (After Suppression)'];
+                        form.elements['Campaign Date'].value = data['Campaign Date'];
+                        form.elements['Campaign Time'].value = data['Campaign Time'];
+                        form.elements['Test Email List/Person'].value = data['Test Email List/Person'];
+                        form.elements['Link Check'].value = data['Link Check'];
+                        form.elements['Content Error Check'].value = data['Content Error Check'];
+                        form.elements['Alt Tag Check'].value = data['Alt Tag Check'];
+                        form.elements['Promo code?'].value = data['Promo code?'];
+                        form.elements['CAN-SPAM Compliant'].value = data['CAN-SPAM Compliant'];
+                        form.elements['Unsubscribe Link'].value = data['Unsubscribe Link'];
+                        form.elements['Salutation(First Name)'].value = data['Salutation(First Name)'];
+                        form.elements['SPF'].value = data['SPF'];
+                        form.elements['DKIM'].value = data['DKIM'];
+                        form.elements['DMARC'].value = data['DMARC'];
+                        form.elements['UTM Tracking?'].value = data['UTM Tracking?'];
+                        form.elements['Live Campaign Link'].value = data['Live Campaign Link'];
+                        form.elements['EOA'].value = data['EOA'];
+                        form.elements['Any Rendering Issues - Device Name + Platform'].value = data['Any Rendering Issues - Device Name + Platform'];
+                        form.elements['Campaign Approval'].value = data['Campaign Approval'];
+                        form.elements['LINKS'].value = data['LINKS'];
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        } else {
+            alert('Please enter a Submission ID');
+        }
+    });
+
+    // Handle sending job sheet to client
+    sendJobSheetBtn.addEventListener('click', function () {
+        const formData = new FormData(form);
+        
+        fetch('<https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec>', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Job sheet sent to client!');
+        })
+        .catch(error => console.error('Error sending job sheet:', error));
+    });
+});
+</script>
+
+
+
+</body>
+</html>
