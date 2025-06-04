@@ -69,7 +69,9 @@
 
     <!-- Buttons -->
     <button type="button" id="saveBtn">Save</button>
-    <button type="submit" id="submitBtn">Submit</button>
+<button type="submit" id="submitBtn" disabled>Submit</button>
+<input type="hidden" id="formStatus" name="Form Status" />
+
     <p id="submissionIdDisplay"></p>
 	<table style="width: 100%; margin-top: 30px; border-collapse: collapse;">
   <tr>
@@ -90,6 +92,7 @@
       <h3 style="margin-top: 0;">Send to Client</h3>
       <p>Use the button below to send the JOB SHEET to the client.</p>
 <button type="button" id="sendJobSheetBtn">SEND JOB SHEET to client</button>
+
     </td>
   </tr>
 </table>
@@ -108,126 +111,112 @@ document.addEventListener('DOMContentLoaded', function () {
     const sendJobSheetBtn = document.getElementById('sendJobSheetBtn');
     const submissionIdDisplay = document.getElementById('submissionIdDisplay');
     const searchResponseId = document.getElementById('searchResponseId');
+    const formStatusField = document.getElementById('formStatus');
 
-    // Initialize createDate and submissionTime
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec';
+
+    // Initialize hidden date fields
     document.getElementById('createDate').value = new Date().toLocaleString();
     document.getElementById('submissionTime').value = new Date().toLocaleString();
 
-    // Handle form submission
+    // Disable Submit initially
+    submitBtn.disabled = true;
+
+    // Enable Submit only when form is valid
+    form.addEventListener('input', function () {
+        submitBtn.disabled = !form.checkValidity();
+    });
+
+    // --- Submit Button ---
     submitBtn.addEventListener('click', function (e) {
-    e.preventDefault();
+        e.preventDefault();
 
-    // Validate form first
-    if (!form.checkValidity()) {
-        form.reportValidity(); // Show validation error messages
-        return; // Stop submission
-    }
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
 
-    // Set/update submission time before submitting
-    document.getElementById('submissionTime').value = new Date().toLocaleString();
+        formStatusField.value = 'Submitted';
+        document.getElementById('submissionTime').value = new Date().toLocaleString();
 
-    // Proceed with submission if valid
-    const formData = new FormData(form);
-
-    fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert('Form submitted successfully!');
-        submissionIdDisplay.textContent = 'Submission ID: ' + data.submissionId;
-    })
-    .catch(error => console.error('Error submitting form:', error));
-});
-
-    // Handle saving form data
-    saveBtn.addEventListener('click', function () {
         const formData = new FormData(form);
-        
-        fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec', {
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Form submitted successfully!');
+            submissionIdDisplay.textContent = 'Submission ID: ' + data.submissionId;
+        })
+        .catch(error => console.error('Error submitting form:', error));
+    });
+
+    // --- Save Button ---
+    saveBtn.addEventListener('click', function () {
+        formStatusField.value = 'Draft';
+        document.getElementById('submissionTime').value = new Date().toLocaleString();
+
+        const formData = new FormData(form);
+
+        fetch(scriptURL, {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
             alert('Form saved successfully!');
-            // Display Submission ID after saving
             submissionIdDisplay.textContent = 'Saved with Submission ID: ' + data.submissionId;
         })
         .catch(error => console.error('Error saving form:', error));
     });
 
-    // Handle fetching data by Submission ID
+    // --- Fetch Data by Submission ID ---
     fetchDataBtn.addEventListener('click', function () {
-        const submissionId = searchResponseId.value;
-        
-        if (submissionId) {
-            fetch('https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec?submissionId=' + submissionId)
-                .then(response => response.json())
-                .then(data => {
-                    if (data) {
-                        // Populate form fields with fetched data
-                        form.elements['Form Filled By'].value = data['Form Filled By'];
-                        form.elements['Client Name'].value = data['Client Name'];
-                        form.elements['Campaign Type'].value = data['Campaign Type'];
-                        form.elements['Job Type'].value = data['Job Type'];
-                        form.elements['No of Emails'].value = data['No of Emails'];
-                        form.elements['Email/SMS/Automation Name'].value = data['Email/SMS/Automation Name'];
-                        form.elements['ESP'].value = data['ESP'];
-                        form.elements['From Name'].value = data['From Name'];
-                        form.elements['From Email Address'].value = data['From Email Address'];
-                        form.elements['Reply-to Email Address'].value = data['Reply-to Email Address'];
-                        form.elements['Subject Line'].value = data['Subject Line'];
-                        form.elements['Preview Text'].value = data['Preview Text'];
-                        form.elements['A/B Testing'].value = data['A/B Testing'];
-                        form.elements['A/B Test Details'].value = data['A/B Test Details'];
-                        form.elements['Main List'].value = data['Main List'];
-                        form.elements['Segment'].value = data['Segment'];
-                        form.elements['Count (After Suppression)'].value = data['Count (After Suppression)'];
-                        form.elements['Campaign Date'].value = data['Campaign Date'];
-                        form.elements['Campaign Time'].value = data['Campaign Time'];
-                        form.elements['Test Email List/Person'].value = data['Test Email List/Person'];
-                        form.elements['Link Check'].value = data['Link Check'];
-                        form.elements['Content Error Check'].value = data['Content Error Check'];
-                        form.elements['Alt Tag Check'].value = data['Alt Tag Check'];
-                        form.elements['Promo code?'].value = data['Promo code?'];
-                        form.elements['CAN-SPAM Compliant'].value = data['CAN-SPAM Compliant'];
-                        form.elements['Unsubscribe Link'].value = data['Unsubscribe Link'];
-                        form.elements['Salutation(First Name)'].value = data['Salutation(First Name)'];
-                        form.elements['SPF'].value = data['SPF'];
-                        form.elements['DKIM'].value = data['DKIM'];
-                        form.elements['DMARC'].value = data['DMARC'];
-                        form.elements['UTM Tracking?'].value = data['UTM Tracking?'];
-                        form.elements['Live Campaign Link'].value = data['Live Campaign Link'];
-                        form.elements['EOA'].value = data['EOA'];
-                        form.elements['Any Rendering Issues - Device Name + Platform'].value = data['Any Rendering Issues - Device Name + Platform'];
-                        form.elements['Campaign Approval'].value = data['Campaign Approval'];
-                        form.elements['LINKS'].value = data['LINKS'];
-                    }
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        } else {
+        const submissionId = searchResponseId.value.trim();
+
+        if (!submissionId) {
             alert('Please enter a Submission ID');
+            return;
         }
+
+        fetch(`${scriptURL}?submissionId=${submissionId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data) return alert("No data found!");
+
+                Object.keys(data).forEach(key => {
+                    if (form.elements[key]) {
+                        form.elements[key].value = data[key];
+                    }
+                });
+
+                formStatusField.value = 'Edited';
+
+                // Revalidate form after population
+                submitBtn.disabled = !form.checkValidity();
+            })
+            .catch(error => console.error('Error fetching data:', error));
     });
 
-    // Handle sending job sheet to client
+    // --- Send Job Sheet to Client ---
     sendJobSheetBtn.addEventListener('click', function () {
         const formData = new FormData(form);
-        
-        fetch('<https://script.google.com/macros/s/AKfycbyi8eq6Ij27o8cU770PQQRaFyqBYMaT0CI4Jz9Gn8i5Hka7kd2OvJlCckliaq5F2sk1/exec>', {
+
+        fetch(scriptURL, {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
-        .then(data => {
+        .then(() => {
             alert('Job sheet sent to client!');
         })
         .catch(error => console.error('Error sending job sheet:', error));
     });
 });
 </script>
+
 
 
 
